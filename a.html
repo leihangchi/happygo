@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>全球水資源現狀 - 環保宣傳</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: "Microsoft JhengHei", Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+            background-color: #f0f4f8;
+            color: #333;
+        }
+
+        .container {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            text-align: center;
+            max-width: 600px;
+            width: 90%;
+        }
+
+        h1 { color: #2c3e50; }
+        p { line-height: 1.6; font-size: 1.1rem; }
+
+        .chart-container {
+            position: relative;
+            margin: 20px auto;
+            height: 300px;
+            width: 300px;
+        }
+
+        button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            font-size: 1rem;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s, transform 0.2s;
+            margin-top: 20px;
+        }
+
+        button:hover {
+            background-color: #2980b9;
+            transform: scale(1.05);
+        }
+
+        #info-text {
+            margin-top: 20px;
+            font-weight: bold;
+            min-height: 24px;
+            color: #e67e22;
+        }
+
+        .highlight {
+            color: #e74c3c;
+            font-size: 1.5rem;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>地球，真的是水球嗎？</h1>
+    <p>雖然地球表面有 70% 被水覆蓋，但真正能供人類利用的淡水有多少？</p>
+    
+    <div class="chart-container">
+        <canvas id="waterChart"></canvas>
+    </div>
+
+    <div id="info-text">點擊下方按鈕，揭曉真相</div>
+    
+    <button onclick="revealData()">點擊顯示淡水比例</button>
+</div>
+
+<script>
+    const ctx = document.getElementById('waterChart').getContext('2d');
+    
+    // 初始數據（灰色狀態）
+    let waterData = {
+        labels: ['鹹水 (海水)', '淡水'],
+        datasets: [{
+            data: [97.5, 2.5],
+            backgroundColor: ['#d1d8e0', '#a5b1c2'], // 初始灰色
+            borderWidth: 2,
+            borderColor: '#ffffff'
+        }]
+    };
+
+    const config = {
+        type: 'pie',
+        data: waterData,
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: { display: false }, // 初始隱藏圖例
+                tooltip: { enabled: false } // 初始禁用提示
+            },
+            animation: { duration: 1000 }
+        }
+    };
+
+    const myChart = new Chart(ctx, config);
+
+    function revealData() {
+        // 更新顏色：深藍色代表鹹水，鮮豔的青色或紅色代表淡水
+        myChart.data.datasets[0].backgroundColor = ['#2980b9', '#ff7675'];
+        
+        // 顯示圖例與提示
+        myChart.options.plugins.legend.display = true;
+        myChart.options.plugins.tooltip.enabled = true;
+        
+        // 更新文字
+        document.getElementById('info-text').innerHTML = 
+            '全球只有 <span class="highlight">2.5%</span> 是淡水！<br>' +
+            '<small>其中大部分還被凍在冰川中，珍惜水資源！</small>';
+        
+        // 重新渲染圖表
+        myChart.update();
+    }
+</script>
+
+</body>
+</html>
